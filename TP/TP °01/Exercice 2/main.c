@@ -1,3 +1,10 @@
+/**
+ * Algorithmes et Programmation 3
+ * TP °01 - Exercice 2
+ * Ayoub Marghad
+ * Group 8
+ */
+
 #include<stdio.h>
 #include<string.h>
 #define max 50
