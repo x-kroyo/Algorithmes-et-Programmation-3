@@ -47,7 +47,7 @@ void ajouterParentAuDebut(char nom[max], char prenom[max]) {
 }
 
 /**
- * Ajouter un enfant à un parent donné au dernier
+ * Ajouter un enfant à un parent donné par son pointeur au dernier de la LSC
  * @return void
  */
 void ajouterEnfant(Parent* P, char nom[max], char prenom[max], int age, char sexe) {
@@ -75,18 +75,15 @@ void ajouterEnfant(Parent* P, char nom[max], char prenom[max], int age, char sex
 }
 
 /**
- *
+ * Compter les parents qui n'ont pas aucun enfants et il retourne ce nombre
+ * @return int
  */
 int compterParentsSansEnfants () {
 
     int NB = 0;
 
-    Parent* P = head;
-
-    while (P != NULL){
+    for (Parent* P = head; P != NULL; P = P->suivant)
         if (P->premier == NULL && P->dernier == NULL) NB++;
-        P = P->suivant;
-    }
 
     return NB;
 
@@ -94,6 +91,7 @@ int compterParentsSansEnfants () {
 
 /**
  * Une fonction qui permet de supprimer les enfants agee de 21 ans pour toutes les parents
+ * @return void
  */
 void supprimer21AnsEnfants () {
 
@@ -105,6 +103,7 @@ void supprimer21AnsEnfants () {
 
         while (E != NULL) {
             if (E->age >= 21) {
+                // Tester si on est au debut du la liste
                 if (prev == NULL) {
                     P->premier = E->suivant;
                     free(E);
@@ -124,8 +123,8 @@ void supprimer21AnsEnfants () {
 }
 
 /**
- *
- *
+ * Ajouter un enfant à un parent selon son prenom
+ * @return void
  */
 void ajouterEnfantAuParent(char pnom[max], char nom[max], char prenom[max], int age , char sexe) {
 
@@ -182,8 +181,11 @@ int main () {
 
     char nom[max], prenom[max];
 
+    // Lire la liste des parents selon le fichier parents.txt
     while (fscanf(fl, " %s %s", nom, prenom) != EOF)
         ajouterParentAuDebut(nom, prenom);
+
+    fclose(fl);
 
     fl = fopen("enfants.txt", "r");
 
@@ -191,9 +193,12 @@ int main () {
         printf("Erreur avec l'ouvertude du fichier enfants.txt\n");
         return 0;
     }
+
     int age;
     char sexe;
     char parentNom[max];
+
+    // Lire la liste des enfants pour chaque parents selon le fichier enfants.txt
     while(fscanf(fl, " %s %s %s %d %c", parentNom, nom, prenom, &age, &sexe) != EOF)
         ajouterEnfantAuParent(parentNom, nom, prenom, age, sexe);
 
