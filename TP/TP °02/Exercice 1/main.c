@@ -162,7 +162,7 @@ void afficherListeParents () {
             printf("Ce monsieur n'a pas d'enfants\n");
         }
         while(E != NULL) {
-            printf("%s %s - %d ans - %c\n", E->nom, E->prenom, E->age, E->sexe);
+            printf("%s %s - %d ans - %s\n", E->nom, E->prenom, E->age, E->sexe == 'M' ? "Homme" : "Femme");
             E = E->suivant;
         }
         P = P->suivant;
@@ -171,24 +171,33 @@ void afficherListeParents () {
 
 }
 
-
 int main () {
 
-    ajouterParentAuDebut("Essaoudi", "Abderrahman");
-    ajouterParentAuDebut("Marghad", "Mohamed");
-    ajouterParentAuDebut("Bennani", "Ali");
-    ajouterParentAuDebut("Mouyain", "Zouhair");
+    FILE *fl = fopen("parents.txt", "r");
 
-    ajouterEnfantAuParent("Essaoudi", "Essaoudi", "Oussama", 19, 'M');
-    ajouterEnfantAuParent("Essaoudi", "Essaoudi", "Mouhsin", 23, 'M');
-    ajouterEnfantAuParent("Essaoudi", "Essaoudi", "Fatima-Ezzahra", 12, 'F');
-    ajouterEnfantAuParent("Essaoudi", "Essaoudi", "Islam", 15, 'M');
+    if (fl == NULL) {
+        printf("Erreur avec l'ouvertude du fichier parents.txt\n");
+        return 0;
+    }
 
-    ajouterEnfantAuParent("Marghad", "Marghad", "Hassna", 31, 'F');
-    ajouterEnfantAuParent("Marghad", "Marghad", "Ghizlane", 20, 'F');
-    ajouterEnfantAuParent("Marghad", "Marghad", "Ayoub", 19, 'M');
+    char nom[max], prenom[max];
 
-    ajouterEnfantAuParent("Bennani", "Bennani", "Hassan", 23, 'M');
+    while (fscanf(fl, " %s %s", nom, prenom) != EOF)
+        ajouterParentAuDebut(nom, prenom);
+
+    fl = fopen("enfants.txt", "r");
+
+    if (fl == NULL) {
+        printf("Erreur avec l'ouvertude du fichier enfants.txt\n");
+        return 0;
+    }
+    int age;
+    char sexe;
+    char parentNom[max];
+    while(fscanf(fl, " %s %s %s %d %c", parentNom, nom, prenom, &age, &sexe) != EOF)
+        ajouterEnfantAuParent(parentNom, nom, prenom, age, sexe);
+
+    fclose(fl);
 
     printf("La liste des parents entrees avec leur enfants \n\n");
     afficherListeParents();
